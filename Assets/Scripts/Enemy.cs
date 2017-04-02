@@ -8,7 +8,12 @@ public class Enemy : LivingEntity {
     State currentState;
 
     public ParticleSystem deathEffect;
-    
+    public ParticleSystem hitEffect;
+
+    public AudioClip spawnSound;
+    public AudioClip damageSound;
+    public AudioClip deathSound;
+
     UnityEngine.AI.NavMeshAgent pathfinder;
     Transform target;
     LivingEntity targetEntity;
@@ -46,6 +51,7 @@ public class Enemy : LivingEntity {
             currentState = State.Chasing;
             targetEntity.OnDeath += OnTargetDeath;
             StartCoroutine(UpdatePath());
+            AudioManager.audioManager.PlaySound(spawnSound, transform.position);
         }
 	}
 
@@ -56,6 +62,7 @@ public class Enemy : LivingEntity {
         }
         startingHealth = enemyHealth;
         enemyMaterial = GetComponent<Renderer>().sharedMaterial;
+        //enemyMaterial = GetComponent<Renderer>().material;
         attackMaterial = GetComponent<Renderer>().material;
         enemyMaterial.color = skinColor;
         originalColor = enemyMaterial.color;
@@ -65,7 +72,13 @@ public class Enemy : LivingEntity {
     {
         if (damage >= health && !dead) {
             Destroy(Instantiate(deathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)) as GameObject, deathEffect.main.startLifetime.constant);
+            AudioManager.audioManager.PlaySound(deathSound, transform.position);
         }
+        else {
+            Destroy(Instantiate(hitEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)) as GameObject, deathEffect.main.startLifetime.constant);
+            AudioManager.audioManager.PlaySound(damageSound, transform.position);
+        }
+        
         base.TakeHit(damage, hitPoint, hitDirection);
     }
 

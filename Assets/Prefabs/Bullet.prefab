@@ -192,5 +192,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
   trailColor: {r: 0.9264706, g: 0.8633278, b: 0.35423875, a: 0.45}
+  impactSound: {fileID: 8300000, guid: 1f20d8da2c2d663488c945d87907272b, type: 3}

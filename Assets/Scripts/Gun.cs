@@ -21,11 +21,13 @@ public class Gun : MonoBehaviour {
 
     float nextShotTime;
 
-    bool triggerReleasedSinceLastShot;
+    bool triggerReleasedSinceLastShot = true;
 
     [Header("Effects")]
     public Transform shell;
     public Transform shellEjector;
+    public AudioClip fireAudio;
+    public AudioClip reloadAudio;
     MuzzleFlash muzzleFlash;
 
 
@@ -59,14 +61,12 @@ public class Gun : MonoBehaviour {
 
     void Shoot() {
         if (!reloading && Time.time > nextShotTime && bulletsRemainingInClip > 0) {
-
             if (fireMode == FireMode.Burst) {
                 if (shotsRemainingInBurst == 0) {
                     return;
                 }
                 shotsRemainingInBurst--;
             }
-
             else if (fireMode == FireMode.SingleShot) {
                 if (!triggerReleasedSinceLastShot) {
                     return;
@@ -85,7 +85,7 @@ public class Gun : MonoBehaviour {
             transform.localPosition -= Vector3.forward * Random.Range(kickBack.x, kickBack.y);
             recoilAngle += Random.Range(kickUp.x, kickUp.y);
             recoilAngle = Mathf.Clamp(recoilAngle, 0, 30);
-                        
+            AudioManager.audioManager.PlaySound(fireAudio, transform.position);            
         }
     }
 
@@ -98,6 +98,7 @@ public class Gun : MonoBehaviour {
     public void Reload() {
         if (!reloading && bulletsRemainingInClip != clipCapacity) {
             StartCoroutine(ReloadAnimation());
+            AudioManager.audioManager.PlaySound(reloadAudio, transform.position);
         }
     }
 

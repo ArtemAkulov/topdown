@@ -856,6 +856,8 @@ MonoBehaviour:
   clipCapacity: 21
   shell: {fileID: 4453265632905960, guid: 9f6c8bc4cffd7924c8b7abc71998570f, type: 2}
   shellEjector: {fileID: 4351625509342686}
+  fireAudio: {fileID: 8300000, guid: e89b951b2665cbb428604c66413a1551, type: 3}
+  reloadAudio: {fileID: 8300000, guid: 02723398215408b4a9881c7e7f2f07ce, type: 3}
   kickBack: {x: 0.03, y: 0.15}
   kickBackNormalize: 0.1
   kickUp: {x: 2, y: 5}

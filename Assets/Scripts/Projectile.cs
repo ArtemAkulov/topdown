@@ -5,6 +5,8 @@ public class Projectile : MonoBehaviour {
 
     public LayerMask collisionMask;
     public Color trailColor;
+    public AudioClip impactSound;
+
     float speed = 10;
     float damage = 1;
     float lifeTime = 3;
@@ -40,9 +42,11 @@ public class Projectile : MonoBehaviour {
 
     void OnHitObject(Collider c, Vector3 hitPoint) {
         IDamageable damageableObject = c.GetComponent<IDamageable>();
-        if (damageableObject != null)
-        {
+        if (damageableObject != null) {
             damageableObject.TakeHit(damage, hitPoint, transform.forward);
+        }
+        else {
+            AudioManager.audioManager.PlaySound(impactSound, transform.position);
         }
         GameObject.Destroy(gameObject);
     }

@@ -28,6 +28,7 @@ public class Spawner : MonoBehaviour {
     bool isDisabled;
 
     public event System.Action<int> OnNewWave;
+    public event System.Action OnEveryoneIsDead;
 
     void Start() {
         playerEntity = FindObjectOfType<Player>();
@@ -69,6 +70,11 @@ public class Spawner : MonoBehaviour {
         }
     }
 
+    IEnumerator StartNextWave() {
+        yield return new WaitForSeconds(2);
+        NextWave();
+    }
+
     IEnumerator SpawnEnemy() {
         float spawnDelay = 1;
         float tileFlashSpeed = 4;
@@ -77,7 +83,6 @@ public class Spawner : MonoBehaviour {
             portal = map.GetTileFromPosition(playerT.position);
         }
         Material portalMaterial = portal.GetComponent<Renderer>().material;
-        print(portalMaterial.color);
         Color portalColor = portalMaterial.color;
         Color flashColor = Color.red;
         float spawnTimer = 0;
@@ -100,7 +105,11 @@ public class Spawner : MonoBehaviour {
     void OnEnemyDeath() {
         enemiesRemainingAlive--;
         if (enemiesRemainingAlive == 0) {
-            NextWave();
+            //NextWave();
+            if (OnEveryoneIsDead != null) {
+                OnEveryoneIsDead();
+            }
+            StartCoroutine(StartNextWave());
         }
     }
 
@@ -118,6 +127,8 @@ public class Spawner : MonoBehaviour {
                 OnNewWave(currentWaveNumber);
             }
             ResetPlayerPosition();
+            nextCampingCheckTimer = timeBetweenCampingChecks + Time.time;
+            campPositionOld = playerT.position;
         }
     }
 
@@ -132,5 +143,4 @@ public class Spawner : MonoBehaviour {
         public float enemyHealth;
         public Color skinColor;
     }
-
 }

@@ -96,6 +96,11 @@ MonoBehaviour:
   startingHealth: 5
   deathEffect: {fileID: 198000012642477260, guid: 7d485d341ce48f94b9b63c386d50223f,
     type: 2}
+  hitEffect: {fileID: 198000012642477260, guid: 830463b7438fbbf43a41b70f073e3af0,
+    type: 2}
+  spawnSound: {fileID: 8300000, guid: 154c31ea553c5f345921ba873bee8ec8, type: 3}
+  damageSound: {fileID: 8300000, guid: d08f5e23b766c2f419252028e3f77ab8, type: 3}
+  deathSound: {fileID: 8300000, guid: ca6523a0a59ff53459167c9599bc7df0, type: 3}
 --- !u!136 &136000010196951202
 CapsuleCollider:
   m_ObjectHideFlags: 1

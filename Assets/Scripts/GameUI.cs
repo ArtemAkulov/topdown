@@ -12,6 +12,10 @@ public class GameUI : MonoBehaviour {
     public Text waveBannerNumber;
     public Text waveBannerEnemies;
 
+    public RectTransform waveCompleteBanner;
+    public Text waveCompleteMessage1;
+    public Text waveCompleteMessage2;
+
     Spawner spawner;
 
 	void Start () {
@@ -21,15 +25,22 @@ public class GameUI : MonoBehaviour {
     private void Awake() {
         spawner = FindObjectOfType<Spawner>();
         spawner.OnNewWave += OnNewWave;
+        spawner.OnEveryoneIsDead += OnEveryoneIsDead;
     }
 
     void OnNewWave(int waveNumber) {
         string[] numbers = { "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten" };
         waveBannerNumber.text = "/// Wave # " + numbers[waveNumber];
         waveBannerEnemies.text = "Enemies to shoot := " + ((spawner.waves[waveNumber - 1].infiniteEnemies) ? "Infinite" : spawner.waves[waveNumber - 1].enemyCount + "");
-        StopCoroutine("AnimateBanner");
-        StartCoroutine("AnimateBanner");
-               
+        IEnumerator startWave = AnimateBanner(waveBanner);
+        StopCoroutine(startWave);
+        StartCoroutine(startWave);
+    }
+
+    void OnEveryoneIsDead() {
+        IEnumerator completeWave = AnimateBanner(waveCompleteBanner);
+        StopCoroutine(completeWave);
+        StartCoroutine(completeWave);
     }
 
     void OnGameOver() {
@@ -38,7 +49,7 @@ public class GameUI : MonoBehaviour {
         GameOverUI.SetActive(true);
     }
 
-    IEnumerator AnimateBanner() {
+    IEnumerator AnimateBanner(RectTransform banner) {
         float animationSpeed = 2.75f;
         float delayTime = 1.25f;
         float noMoreDelays = Time.time + 1 / animationSpeed + delayTime;
@@ -53,7 +64,7 @@ public class GameUI : MonoBehaviour {
                     animationDirection = -1;
                 }
             }
-            waveBanner.anchoredPosition = Vector2.up * Mathf.Lerp(-235, 0, animationPercentage);
+            banner.anchoredPosition = Vector2.up * Mathf.Lerp(-235, 0, animationPercentage);
             yield return null;
         }
     }

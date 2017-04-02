@@ -12,5 +12,4 @@ public static class Utility{
         }
         return array;
     }
-	
 }
