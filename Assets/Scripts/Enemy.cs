@@ -10,6 +10,8 @@ public class Enemy : LivingEntity {
     public ParticleSystem deathEffect;
     public ParticleSystem hitEffect;
 
+    public static event System.Action OnDeathStatic;
+
     public AudioClip spawnSound;
     public AudioClip damageSound;
     public AudioClip deathSound;
@@ -61,8 +63,12 @@ public class Enemy : LivingEntity {
             damage = Mathf.Ceil(targetEntity.startingHealth / hitsToKillPlayer);
         }
         startingHealth = enemyHealth;
-        enemyMaterial = GetComponent<Renderer>().sharedMaterial;
-        //enemyMaterial = GetComponent<Renderer>().material;
+
+        ParticleSystem.MainModule deathEffectSettings = deathEffect.main;
+        ParticleSystem.MainModule hitEffectSettings = hitEffect.main;
+        deathEffectSettings.startColor = new Color(skinColor.r, skinColor.g, skinColor.b, 1);
+        hitEffectSettings.startColor = new Color(skinColor.r, skinColor.g, skinColor.b, 1);
+        enemyMaterial = GetComponent<Renderer>().material;
         attackMaterial = GetComponent<Renderer>().material;
         enemyMaterial.color = skinColor;
         originalColor = enemyMaterial.color;
@@ -71,6 +77,9 @@ public class Enemy : LivingEntity {
     public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
     {
         if (damage >= health && !dead) {
+            if (OnDeathStatic != null) {
+                OnDeathStatic();
+            }
             Destroy(Instantiate(deathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)) as GameObject, deathEffect.main.startLifetime.constant);
             AudioManager.audioManager.PlaySound(deathSound, transform.position);
         }
@@ -118,6 +127,7 @@ public class Enemy : LivingEntity {
         while (percent <= 1) {
             if (percent >= .5f && !hasAppliedDamage) {
                 hasAppliedDamage = true;
+                AudioManager.audioManager.PlaySound("Player Damage", transform.position);
                 targetEntity.TakeDamage(damage);
             }
             percent += Time.deltaTime * attackSpeed;

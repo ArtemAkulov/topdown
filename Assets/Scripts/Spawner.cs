@@ -118,6 +118,9 @@ public class Spawner : MonoBehaviour {
     }
 
     void NextWave() {
+        //if (currentWaveNumber > 0) {
+        //    AudioManager.audioManager.PlaySound("Wave Complete", Vector3.zero);
+        //}
         currentWaveNumber++;
         if (currentWaveNumber - 1 < waves.Length) {
             currentWave = waves[currentWaveNumber - 1];

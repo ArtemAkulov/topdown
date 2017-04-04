@@ -2034,8 +2034,8 @@ MonoBehaviour:
   - {fileID: 4517683064561222}
   projectile: {fileID: 114000013618542820, guid: 171dcfb96a440b54d8dcf604c9e5a455,
     type: 2}
-  msBetweenShots: 50
-  muzzleVelocity: 60
+  msBetweenShots: 70
+  muzzleVelocity: 50
   reloadTime: 0.8
   shotsInBurst: 3
   clipCapacity: 200

@@ -46,7 +46,7 @@ public class Projectile : MonoBehaviour {
             damageableObject.TakeHit(damage, hitPoint, transform.forward);
         }
         else {
-            AudioManager.audioManager.PlaySound(impactSound, transform.position);
+            AudioManager.audioManager.PlaySound("Impact", transform.position);
         }
         GameObject.Destroy(gameObject);
     }

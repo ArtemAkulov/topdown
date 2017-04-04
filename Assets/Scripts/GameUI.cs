@@ -16,16 +16,31 @@ public class GameUI : MonoBehaviour {
     public Text waveCompleteMessage1;
     public Text waveCompleteMessage2;
 
+    public Text scoreUI;
+    public Text gameOverScoreUI;
+    public RectTransform healthBar;
+
     Spawner spawner;
+    Player player;
 
 	void Start () {
-        FindObjectOfType<Player>().OnDeath += OnGameOver;
+        player = FindObjectOfType<Player>();
+        player.OnDeath += OnGameOver;
 	}
 
-    private void Awake() {
+    void Awake() {
         spawner = FindObjectOfType<Spawner>();
         spawner.OnNewWave += OnNewWave;
         spawner.OnEveryoneIsDead += OnEveryoneIsDead;
+    }
+
+    void Update() {
+        scoreUI.text = KeepScore.score.ToString("D6");
+        float healthPercent = 0;
+        if (player != null) {
+            healthPercent = player.health / player.startingHealth;
+        }
+        healthBar.localScale = new Vector3(healthPercent, 1, 1);
     }
 
     void OnNewWave(int waveNumber) {
@@ -38,6 +53,7 @@ public class GameUI : MonoBehaviour {
     }
 
     void OnEveryoneIsDead() {
+        AudioManager.audioManager.PlaySound2D("Wave Complete");
         IEnumerator completeWave = AnimateBanner(waveCompleteBanner);
         StopCoroutine(completeWave);
         StartCoroutine(completeWave);
@@ -45,7 +61,10 @@ public class GameUI : MonoBehaviour {
 
     void OnGameOver() {
         Cursor.visible = true;
-        StartCoroutine(Fade(Color.clear, Color.black, 1));
+        gameOverScoreUI.text = scoreUI.text;
+        StartCoroutine(Fade(Color.clear, new Color(1, 1, 1, 0.8f), 1));
+        scoreUI.gameObject.SetActive(false);
+        healthBar.transform.parent.gameObject.SetActive(false);
         GameOverUI.SetActive(true);
     }
 
@@ -86,4 +105,7 @@ public class GameUI : MonoBehaviour {
         SceneManager.LoadScene("level0");
     }
 
+    public void ReturnToMenu() {
+        SceneManager.LoadScene("menu");
+    }
 }
